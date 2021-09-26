@@ -24,152 +24,43 @@
     <body class="antialiased">
 
     <div class="container mt-5">
-
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>{{ session('success') }}</strong> 
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         <div class="row">
-        <h1>Users</h1>
+        @php
+            $name = getName( request()->route('id') );
+        @endphp
 
-        <div class="ml-auto">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#userModal">
-                Add User
-            </button>
-        </div>
-
+        <h1>{{ $name[0]->name }}'s Project List</h1>
         </div>
             <table class="table">
                 <thead>
                     <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Project</th>
+                    <th scope="col">Members</th>
+                    <th scope="col">Estimated Hours</th>
                     <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
 
-                @foreach ($users as $user)
+                @foreach ($user as $row)
+
+                @php
+                    $list = retrieveListOfPeople($row->id);
+                    $hours = totalHours($row->id)
+                @endphp
                     <tr>
-                        <td class='w-25'>{{ $user->id }}</td>
-                        <td class='w-50'>{{ $user->name }}</td>
-                        <td class='w-25'><a class='btn btn-primary' href="{{ url('user/'.$user->name.'/'.$user->id) }}">View</a></td>
+                        <td class='w-25'>{{ $row->project_name }}</td>
+                        <td class='w-50'>{{ $list }}</td>
+                        <td class='w-50'>{{ $hours }}</td>
+                        <td class='w-25'><a class='btn btn-primary' href="{{ url('project/'.$row->id) }}">View</a></td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
 
-
-            <div class="row">
-            <h1>Projects</h1>
-
-            <div class="ml-auto">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#projectModal">
-                    Add Project
-                </button>
-            </div>
-
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                @foreach ($projects as $project)
-                    <tr>
-                        <td class='w-25'>{{ $project->id }}</td>
-                        <td class="w-50">{{ $project->project_name }}</td>
-                        <td class='w-25'><a class='btn btn-primary' href="{{ url('project/'.$project->id) }}">View</a></td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-
+            <a href="{{ url('/') }}" class="btn btn-primary">Go Back</a>
 
     </div>
-
-    <!-- Users Modal -->
-    <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add New User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ url('user/add') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" class="form-control" id="name" aria-describedby="name" placeholder="Enter name">
-                </div>
-
-                @error('name')
-                    <span class="text-danger"> {{ $message }} </span>
-                @enderror
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Add</button>
-                </form>
-            </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Project Modal -->
-    <div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add New Project</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ url('project/add') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label for="project_name">Project Name</label>
-                    <input type="text" name="project_name" class="form-control" id="project_name" aria-describedby="project_name" placeholder="Enter project name">
-                </div>
-
-                @error('project_name')
-                    <span class="text-danger"> {{ $message }} </span>
-                @enderror
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Add Project</button>
-                </form>
-            </div>
-            </div>
-        </div>
-    </div>
-
     <script src="{{ asset('js/app.js') }}"></script>
     </body>
-
-    <script>
-        @if (count($errors->name) > 0)
-        $('#userModal').modal('show');
-        @endif
-    </script>
-    <script>
-        @if (count($errors->project_name) > 0)
-        $('#projectModal').modal('show');
-        @endif
-  </script>
 </html>

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/user/{name}/{id}', [App\Http\Controllers\UsersController::class, 'index']);
+Route::get('/project/{id}', [App\Http\Controllers\ProjectsController::class, 'index']);
+Route::post('/user/add', [App\Http\Controllers\UsersController::class, 'Add']);
+Route::post('/project/add', [App\Http\Controllers\ProjectsController::class, 'Add']);
+Route::post('/task/add', [App\Http\Controllers\TasksController::class, 'Add']);
+
+Auth::routes();
+
