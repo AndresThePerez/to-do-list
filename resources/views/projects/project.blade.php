@@ -126,7 +126,7 @@
             @enderror
 
             <div class="form-group">
-                <label for="hours">Task name</label>
+                <label for="hours">Task Hours</label>
                 <input type="text" name="hours" class="form-control" id="hours" aria-describedby="hours" placeholder="Enter hours">
             </div>
 
